@@ -13,7 +13,7 @@ class Url(object):
     'author': "F. Kolacek <fkolacek@redhat.com>",
     'version': "0.1",
     'triggers': {
-      '(https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-=\?\~_;+%#&:]*)*\/?)': "callGrabUrl"
+      '(https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-=\?\~_;+%#&:]*)\/?)': "callGrabUrl"
     }
   }
 
