@@ -1,0 +1,119 @@
+#!/bin/bash
+# IRC Launcher
+# Description: 
+# Author: Frantisek Kolacek <fkolacek@redhat.com>
+# Version: 0.1a
+
+IIPID=""
+IIBIN=${IIBIN:-"ii/ii"}
+
+CPID=""
+CBIN=${HBIN:-"core/core.py"}
+
+SERVER=${SERVER:-"irc.freenode.org"}
+PORT=${PORT:-6667}
+NICK=${NICK:-"Clap_Trap"}
+PASS=${PASS:-""}
+CHANNELS=${CHANNELS:-""}
+NAME=${NAME:-"CL4P-TP"}
+
+IRCDIR=${IRCDIR:-"ircdir"}
+IRCLOG=${IRCLOG:-"${IRCDIR}/${SERVER}.log"}
+CORELOG=${CORELOG:-"${IRCDIR}/${SERVER}-core.log"}
+
+colorOk="\033[32m"
+colorFail="\033[31m"
+colorEnd="\033[0m"
+
+export PYTHONUNBUFFERED=1
+
+function cleanup {
+  printMessage "Shutting down.."
+  echo '/quit' > "${IRCDIR}/${SERVER}/in"
+  sleep 2
+  killAll
+  exit 0
+}
+
+function killAll {
+  kill -9 $IIPID 2>/dev/null
+  kill -9 $CPID 2>/dev/null
+}
+
+function printMessage {
+  echo -e "${colorOk}[*] $1${colorEnd}"
+}
+
+function printError {
+  echo -e "${colorFail}[!] $1${colorEnd}"
+  [ ! -z $2 ] && { killAll; exit $2; }
+}
+
+trap cleanup SIGTERM SIGINT
+
+if [ ! -f "${IIBIN}" ]; then
+  printMessage "Building IRC client.."
+  OUT=$(make -C ii 2>&1)
+
+  [ ! -f "${IIBIN}" ] && printError "Build failed, more info below\n${OUT}" 1
+fi
+
+rm -f "${IRCLOG}" 2>/dev/null
+
+TMPNICK="${NICK}"
+
+while true; do
+  rm -rf "${IRCDIR}/${SERVER}" 2>/dev/null
+
+  printMessage "Connecting to server ${SERVER} as user ${TMPNICK}"
+  $IIBIN -i "${IRCDIR}" -s "${SERVER}" -p ${PORT} -n "${TMPNICK}" -f "${NAME}" >/dev/null 2>&1 &
+
+  IIPID=$!
+
+  sleep 1
+
+  kill -s 0 $IIPID 2>/dev/null || printError "Unable to start IRC client" 1
+
+  [ ! -e "${IRCDIR}/${SERVER}/out" ] &&  printError "Unable to start IRC client" 1
+
+  printMessage "Starting handler ${HBIN}"
+  $CBIN "${IRCDIR}" "${SERVER}" "${TMPNICK}" "${CHANNELS}" >"${CORELOG}" 2>&1 &
+  CPID=$!
+
+  sleep 1
+
+  kill -s 0 $CPID 2>/dev/null || printError "Unable to start handler" 1
+
+  while read line; do
+    case $line in
+      *End\ of\ \/MOTD*)
+        printMessage "Connected to server"
+
+        if [ ! -z "${PASS}" ]; then
+          echo "/privmsg nickserv :identify ${NICK} ${PASS}" > "${IRCDIR}/${SERVER}/in"
+        fi
+        for channel in ${CHANNELS}; do
+          printMessage "Joining ${channel}"
+          echo "/join ${channel}" > "${IRCDIR}/${SERVER}/in"
+        done
+        ;;
+      *Nickname\ is\ already\ in\ use*)
+        printError "Nick ${TMPNICK} is already in use"
+        TMPNICK="${TMPNICK}_"
+        echo '/quit' > "${IRCDIR}/${SERVER}/in"
+        ;;
+      *)
+        #echo "$line"
+        ;;
+    esac
+
+  done < <(tail -n 1000 -f --pid $IIPID "${IRCDIR}/${SERVER}/out" 2>/dev/null | tee "${IRCLOG}")
+
+  disown $CPID
+  kill -9 $CPID >/dev/null 2>&1
+
+  printMessage "Restarting.."
+  sleep 2
+done
+
+exit 0

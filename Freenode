@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export SERVER="irc.freenode.org"
+export NICK="Clap_Trap"
+export PASS=""
+export CHANNELS="#rit2 #rit3"
+export NAME="CL4P-TP"
+./launcher
