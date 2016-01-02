@@ -1,0 +1,2 @@
+# ClapTrap
+IRC bot
