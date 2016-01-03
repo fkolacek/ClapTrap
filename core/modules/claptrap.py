@@ -12,7 +12,7 @@ class Claptrap(object):
     'author': "F. Kolacek <fkolacek@redhat.com>",
     'version': "1.0",
     'triggers': {
-      '^!clap': "callClapTrap"
+      '^!clap': "haveSomeFun"
     },
     'usage': [
       "!clap - Shows random Clap Trap's quote"  
@@ -142,7 +142,7 @@ class Claptrap(object):
     ]
     pass
 
-  def callClapTrap(self, bot, message):
+  def haveSomeFun(self, bot, message):
     if message.isSystem():
       return
     

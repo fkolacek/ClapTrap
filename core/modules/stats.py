@@ -12,11 +12,11 @@ class Stats(object):
     'author': "F. Kolacek <fkolacek@redhat.com>",
     'version': "1.0",
     'triggers': {
-      '^!top ?': "callTop",
-      '^[^!].*': "callRecord",
-      '^!seen': "callSeen",
-      '^!last': "callLast",
-      '^!uptime': "callUptime"
+      '^!top ?': "top",
+      '^[^!].*': "record",
+      '^!seen': "seen",
+      '^!last': "last",
+      '^!uptime': "uptime"
     },
     'usage': [
       "!top [nick] - Show statistics",
@@ -31,7 +31,7 @@ class Stats(object):
 
     self._uptime = time.time()
 
-  def callTop(self, bot, message):
+  def top(self, bot, message):
     if message.isSystem():
       return
 
@@ -69,7 +69,7 @@ class Stats(object):
       else:
         bot.addReply(message.channel, "Usage: !top [nick]")
 
-  def callRecord(self, bot, message):
+  def record(self, bot, message):
     if message.isSystem():
       return
 
@@ -83,7 +83,7 @@ class Stats(object):
       else:
         bot.database.execute("UPDATE Stats_messages SET Count=Count+1, Date=?, Message=? WHERE Nick = ? AND Channel = ?", (t, message.message, message.nick, message.channel, ))
 
-  def callSeen(self, bot, message):
+  def seen(self, bot, message):
     if message.isSystem():
       return
 
@@ -105,7 +105,7 @@ class Stats(object):
       else:
         bot.addReply(message.channel, "Usage: !seen [nick]")
   
-  def callLast(self, bot, message):
+  def last(self, bot, message):
     if message.isSystem():
       return
 
@@ -130,7 +130,7 @@ class Stats(object):
       else:
         bot.addReply(message.channel, "Usage: !last [nick]")
 
-  def callUptime(self, bot, message):
+  def uptime(self, bot, message):
     if message.isSystem():
       return
 

@@ -11,14 +11,14 @@ class Logger(object):
     'author': "F. Kolacek <fkolacek@redhat.com>",
     'version': "1.0",
     'triggers': {
-      '.*': "callLog"
+      '.*': "log"
     }
   }
 
   def __init__(self, bot):
     pass
 
-  def callLog(self, bot, message):
+  def log(self, bot, message):
     if not os.path.isdir("%s/logs" % bot.config['ircdir']):
       os.mkdir("%s/logs" % bot.config['ircdir'], 0755)
 

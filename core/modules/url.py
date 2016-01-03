@@ -13,14 +13,14 @@ class Url(object):
     'author': "F. Kolacek <fkolacek@redhat.com>",
     'version': "0.1",
     'triggers': {
-      '(https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-=\?\~_;+%#&:]*)\/?)': "callGrabUrl"
+      '(https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.\-=\?\~_;+%#&:]*)\/?)': "grabUrl"
     }
   }
 
   def __init__(self, bot):
     pass
 
-  def callGrabUrl(self, bot, message):
+  def grabUrl(self, bot, message):
     for trigger, callback in self.meta['triggers'].iteritems():
       if callback == "callGrabUrl":
         break

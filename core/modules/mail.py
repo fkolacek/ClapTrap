@@ -12,8 +12,8 @@ class Mail(object):
     'author': "F. Kolacek <fkolacek@redhat.com>",
     'version': "0.1",
     'triggers': {
-      '^!tell': "callTell",
-      '.*': "callWatch"
+      '^!tell': "tell",
+      '.*': "watch"
     },
     'usage': [
       "!tell [nick] [message] - "
@@ -28,7 +28,7 @@ class Mail(object):
       'nick': '\-\!\- ([^ ]+) changed nick to ([^ ]+)'
     }
 
-  def callTell(self, bot, message):
+  def tell(self, bot, message):
     if message.isSystem():
       return
 
@@ -53,7 +53,7 @@ class Mail(object):
         bot.addReply(message.channel, "Usage: !tell [nick] [message]")
 
 
-  def callWatch(self, bot, message):
+  def watch(self, bot, message):
     if not message.isSystem():
       return
 

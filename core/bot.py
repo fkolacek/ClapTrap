@@ -106,7 +106,7 @@ class Bot(object):
           continue
 
         if callable(getattr(obj, callback, None)):
-          print "[*] Trigger %s registered for callback %s.%s" % (trigger, modTitle, callback)
+          print "[*] Callback %s.%s registered trigger %s" % (modTitle, callback, trigger)
           t = {
             'module':   modTitle,
             'trigger':  trigger,
