@@ -23,6 +23,7 @@ class Bot(object):
       'ircdir':   args[1],
       'server':   args[2],
       'nick':     args[3],
+      'channels': args[4].split(' '),
       'workdir':  os.path.dirname(os.path.abspath(__file__)),
     }
 
@@ -35,6 +36,8 @@ class Bot(object):
     self._replies = []
 
     try:
+      print "[*] Starting core"
+
       self._initDatabase()
       self._initModules()
 
@@ -122,6 +125,8 @@ class Bot(object):
 
       if message.nick == self.config['nick']:
         continue
+
+      self._controller.processMessage(self, message)
 
       if message.isValid():
         print "[*] Processing message c:%s n:%s m:%s" % (message.channel, message.nick, message.message)

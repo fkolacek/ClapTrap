@@ -74,7 +74,7 @@ class Stats(object):
       return
 
     if not message.isPrivate():
-      t = time.strftime('%Y-%m-%d %H:%M:%S')
+      t = time.strftime('%Y-%m-%d %H:%M')
 
       exists = bot.database.fetchone("SELECT Nick FROM Stats_messages WHERE Nick = ? AND Channel = ? LIMIT 1", (message.nick, message.channel, ))
 

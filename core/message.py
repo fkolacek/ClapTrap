@@ -6,6 +6,7 @@ import re
 class Message(object):
 
   def __init__(self, raw):
+    self.raw = raw
     self.channel = None
     self.date = None
     self.nick = None
@@ -30,6 +31,9 @@ class Message(object):
     return self.system
 
   def isPrivate(self):
+    if self.system:
+      return false
+
     return not self.channel.startswith("#")
 
   def isValid(self):
