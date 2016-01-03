@@ -11,6 +11,7 @@ import re
 from database import Database
 from watcher import Watcher
 from message import Message
+from controller import Controller
 from pprint import pprint
 
 class Bot(object):
@@ -37,6 +38,7 @@ class Bot(object):
       self._initDatabase()
       self._initModules()
 
+      self._controller = Controller(self)
       self._watcher = Watcher(self.config['ircdir'], self._callback, ['out'])
     except:
       e = sys.exc_info()
@@ -84,6 +86,9 @@ class Bot(object):
       if 'triggers' not in obj.meta:
         print "[!] No triggers in module %s, skipping" % modTitle
         return
+
+      if 'usage' not in obj.meta:
+        print "[?] No usage section in module %s, module won't be listed in help" % modTitle
 
       for trigger, callback in obj.meta['triggers'].iteritems():
 

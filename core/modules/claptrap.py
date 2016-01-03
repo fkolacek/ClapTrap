@@ -13,7 +13,10 @@ class Claptrap(object):
     'version': "1.0",
     'triggers': {
       '^!clap': "callClapTrap"
-    }
+    },
+    'usage': [
+      "!clap - Shows random Clap Trap's quote"  
+    ]
   }
 
   def __init__(self, bot):
@@ -140,6 +143,9 @@ class Claptrap(object):
     pass
 
   def callClapTrap(self, bot, message):
+    if message.isSystem():
+      return
+    
     cmd = message.cmd()
 
     if cmd and cmd == "!clap":

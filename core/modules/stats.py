@@ -17,7 +17,13 @@ class Stats(object):
       '^!seen': "callSeen",
       '^!last': "callLast",
       '^!uptime': "callUptime"
-    }
+    },
+    'usage': [
+      "!top [nick] - Show statistics",
+      "!seen [nick] - ",
+      "!last [nick] - ",
+      "!uptime - Show uptime"
+    ]
   }
 
   def __init__(self, bot):
@@ -26,6 +32,9 @@ class Stats(object):
     self._uptime = time.time()
 
   def callTop(self, bot, message):
+    if message.isSystem():
+      return
+
     cmd = message.cmd()
 
     if cmd and cmd == "!top":
@@ -61,6 +70,9 @@ class Stats(object):
         bot.addReply(message.channel, "Usage: !top [nick]")
 
   def callRecord(self, bot, message):
+    if message.isSystem():
+      return
+
     if not message.isPrivate():
       t = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -72,6 +84,9 @@ class Stats(object):
         bot.database.execute("UPDATE Stats_messages SET Count=Count+1, Date=?, Message=? WHERE Nick = ? AND Channel = ?", (t, message.message, message.nick, message.channel, ))
 
   def callSeen(self, bot, message):
+    if message.isSystem():
+      return
+
     cmd = message.cmd()
 
     if cmd and cmd == "!seen":
@@ -91,6 +106,9 @@ class Stats(object):
         bot.addReply(message.channel, "Usage: !seen [nick]")
   
   def callLast(self, bot, message):
+    if message.isSystem():
+      return
+
     cmd = message.cmd()
 
     if cmd and cmd == "!last":
@@ -113,6 +131,9 @@ class Stats(object):
         bot.addReply(message.channel, "Usage: !last [nick]")
 
   def callUptime(self, bot, message):
+    if message.isSystem():
+      return
+
     cmd = message.cmd()
 
     if cmd and cmd == "!uptime":
