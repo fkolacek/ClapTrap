@@ -8,6 +8,7 @@ class Database(object):
   def __init__(self, filename):
     self._filename = filename
     self._conn = sqlite3.connect(filename)
+    self._conn.text_factory = str
 
   def __del__(self):
     if self._conn:

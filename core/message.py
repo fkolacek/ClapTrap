@@ -16,8 +16,8 @@ class Message(object):
     regularMessage = '^.+\/([^\/]+)\/out\: ([0-9\-]+ [0-9\:]+) <(.+)> (.*)$'
     systemMessage = '^.+\/([^\/]+)\/out\: ([0-9\-]+ [0-9\:]+) \-\!\- ([^\( ]+) ?(.*)$'
 
-    regularMatch = re.search(regularMessage, raw)
-    systemMatch = re.search(systemMessage, raw)
+    regularMatch = re.search(regularMessage, self.raw)
+    systemMatch = re.search(systemMessage, self.raw)
 
     if regularMatch:
       self.channel, self.date, self.nick, self.message = regularMatch.groups()

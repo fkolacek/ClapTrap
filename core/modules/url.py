@@ -33,7 +33,7 @@ class Url(object):
       print "[*] Grab URL: %s" % url
 
       soup = BeautifulSoup(urllib2.urlopen(url))
-      title = soup.title.string.encode('ascii', 'ignore')
+      title = soup.title.string.encode('utf-8', 'ignore')
       bot.addReply(message.channel, "[%s]" % title.strip())
 
 
