@@ -35,6 +35,9 @@ class Url(object):
       soup = BeautifulSoup(urllib2.urlopen(url),convertEntities=BeautifulSoup.HTML_ENTITIES)
       title = soup.title.string.encode('utf-8', 'ignore')
 
-      bot.addReply(message.channel, "[%s]" % title.strip())
+      if title.count('\n') > 8:
+        bot.addReply(message.channel, "%s: %s" % (message.nick, "it's not funny anymore!"))
+
+      bot.addReply(message.channel, "[%s]" % title.split('\n', 1)[0].strip())
 
 
