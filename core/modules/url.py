@@ -24,7 +24,7 @@ class Url(object):
     for trigger, callback in self.meta['triggers'].iteritems():
       if callback == "callGrabUrl":
         break
-    
+
     match = re.search(trigger, message.message)
 
     if match:
@@ -32,8 +32,9 @@ class Url(object):
 
       print "[*] Grab URL: %s" % url
 
-      soup = BeautifulSoup(urllib2.urlopen(url))
+      soup = BeautifulSoup(urllib2.urlopen(url),convertEntities=BeautifulSoup.HTML_ENTITIES)
       title = soup.title.string.encode('utf-8', 'ignore')
+
       bot.addReply(message.channel, "[%s]" % title.strip())
 
 
