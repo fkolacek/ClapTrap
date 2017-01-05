@@ -82,5 +82,20 @@ class Controller(object):
           pass
     elif message.isValid():
       pass
+    # Message is invalid - not known
     else:
-      pass
+      ####
+      #### This should ne moved somewhere else in the future!
+      ####
+
+      # 2017-01-01 00:00 = #test :@FLC user1 user2
+      match = re.search("^.* = (#[^ ]+) (.+)$", message.raw)
+
+      if match:
+        channel, users = match.groups()
+
+        for part in [ '@', '+', bot.config['nick']]:
+            users = users.replace(part, '')
+
+        for user in users.strip().split(' '):
+          self._users[channel].addUser(user)

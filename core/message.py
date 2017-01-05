@@ -55,5 +55,3 @@ class Message(object):
       return parts
     else:
       return []
-
-
