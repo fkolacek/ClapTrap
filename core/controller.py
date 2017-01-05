@@ -97,6 +97,5 @@ class Controller(object):
         for part in [ '@', '+', bot.config['nick']]:
             users = users.replace(part, '')
 
-        uu = .strip().split(' ')
-        for u in uu:
-          self._users[channel.lower()].addUser(u)
+        for user in users.strip().split(' '):
+          self._users[channel.lower()].addUser(user)
