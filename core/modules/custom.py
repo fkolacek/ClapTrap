@@ -14,7 +14,7 @@ class Custom(object):
     'version': "1.0",
     'triggers': {
       '^!coffee': "whatAboutCoffee",
-      '^[^!].*': "recordAnswers",
+      '^(y|n)$': "recordAnswers",
     },
     'usage': [
       "!coffee - Asks everyone on channel if they want coffee"
@@ -24,6 +24,7 @@ class Custom(object):
   def __init__(self, bot):
     self._last = 0
     self._requester = None
+    self._channel = None
     self._mode = False
     self._answers = {}
     self._drinkers = 0
@@ -40,10 +41,14 @@ class Custom(object):
         return
 
       users = list(bot._controller._users[message.channel]._users)
-      users.remove(message.nick)
+
+      for u in ['CHANSERV', 'USERSERV', message.nick]:
+        if u in users:
+          users.remove(u)
 
       if len(users) > 0:
         self._requester = message.nick
+        self._channel = message.channel
         self._mode = True
         self._answers = {}
         self._drinkers = len(users)
@@ -65,11 +70,28 @@ class Custom(object):
         print "[*] Got n from %s" % message.nick
         self._answers[message.nick] = False
 
-      if len(self._answers) == self._drinkers:
-        drinkers = []
-        for user,answer in self._answers.iteritems():
-          if answer:
-            drinkers.append(user)
+      self.getResults(bot)
 
-        bot.addReply(message.channel, "%s: make coffee for %d people(%s)" % (self._requester, len(drinkers), ','.join(drinkers)))
-        self._mode = False
+  def getResults(self, bot):
+    if len(self._answers) == self._drinkers:
+      drinkers = []
+      for user,answer in self._answers.iteritems():
+        if answer:
+          drinkers.append(user)
+
+      if len(drinkers) == 0:
+        bot.addReply(self._channel, "%s: No one wants to have coffee with you!" % (self._requester))
+      elif len(drinkers) == 1:
+        bot.addReply(self._channel, "%s: Only %s wants to have coffee with you." % (self._requester, ','.join(drinkers)))
+      else:
+        bot.addReply(self._channel, "%s: Make coffee for %d people(%s)" % (self._requester, len(drinkers), ','.join(drinkers)))
+
+      self._mode = False
+
+  def tick(self, bot):
+    if self._mode:
+      if time.time() - self._last > 60:
+
+        bot.addReply(self._channel, "I waited long enough.. let's close it.")
+        self._drinkers = len(self._answers)
+        self.getResults(bot)

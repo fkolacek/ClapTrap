@@ -34,6 +34,7 @@ class Bot(object):
 
     self._triggers = []
     self._replies = []
+    self._timers = []
 
     try:
       print "[*] Starting core"
@@ -92,6 +93,10 @@ class Bot(object):
 
       if 'usage' not in obj.meta:
         print "[?] No usage section in module %s, module won't be listed in help" % modTitle
+
+      if callable(getattr(obj, 'tick', None)):
+        print "[*] Module %s has timer support" % (modTitle)
+        self._timers.append(obj)
 
       for trigger, callback in obj.meta['triggers'].iteritems():
 
@@ -171,4 +176,12 @@ class Bot(object):
 
         self.sendReply(reply)
 
-      time.sleep(0.1)
+      # Timer
+      for obj in self._timers:
+        try:
+          getattr(obj, 'tick')(self)
+        except:
+          e = sys.exc_info()
+          print "[!] Uncaught exception: %s - %s" % (e[0], e[1])
+
+      time.sleep(0.5)

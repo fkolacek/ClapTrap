@@ -94,7 +94,7 @@ class Controller(object):
       if match:
         channel, users = match.groups()
 
-        for part in [ '@', '+', bot.config['nick']]:
+        for part in [ '@', '+', 'CHANSERV', 'USERSERV', bot.config['nick']]:
             users = users.replace(part, '')
 
         for user in users.strip().split(' '):
