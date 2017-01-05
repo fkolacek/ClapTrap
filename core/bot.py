@@ -23,7 +23,7 @@ class Bot(object):
       'ircdir':   args[1],
       'server':   args[2],
       'nick':     args[3],
-      'channels': args[4].split(' '),
+      'channels': args[4].lower().split(' '),
       'workdir':  os.path.dirname(os.path.abspath(__file__)),
     }
 

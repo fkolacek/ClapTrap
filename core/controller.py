@@ -88,7 +88,7 @@ class Controller(object):
       #### This should ne moved somewhere else in the future!
       ####
 
-      # 2017-01-01 00:00 = #test :@FLC user1 user2
+      # 2017-01-01 00= #test :@FLC user1 user2
       match = re.search("^.* = (#[^ ]+) (.+)$", message.raw)
 
       if match:
@@ -97,5 +97,6 @@ class Controller(object):
         for part in [ '@', '+', bot.config['nick']]:
             users = users.replace(part, '')
 
-        for user in users.strip().split(' '):
-          self._users[channel].addUser(user)
+        uu = .strip().split(' ')
+        for u in uu:
+          self._users[channel.lower()].addUser(u)

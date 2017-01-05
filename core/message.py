@@ -27,6 +27,8 @@ class Message(object):
     else:
       print "[!] Invalid message: %s" % raw
 
+     self.channel = self.channel.lower()
+
   def isSystem(self):
     return self.system
 
