@@ -21,13 +21,13 @@ class Message(object):
 
     if regularMatch:
       self.channel, self.date, self.nick, self.message = regularMatch.groups()
+      self.channel = self.channel.lower()
     elif systemMatch:
       self.channel, self.date, self.nick, self.message = systemMatch.groups()
+      self.channel = self.channel.lower()
       self.system = True
     else:
       print "[!] Invalid message: %s" % raw
-
-    self.channel = self.channel.lower()
 
   def isSystem(self):
     return self.system
