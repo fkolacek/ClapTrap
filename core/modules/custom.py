@@ -52,6 +52,7 @@ class Custom(object):
         self._mode = True
         self._answers = {}
         self._drinkers = len(users)
+        self._answers[message.nick] = True
         bot.addReply(message.channel, "Coffee time(y/n)? %s" % ','.join(users))
 
         self._last = time.time()
